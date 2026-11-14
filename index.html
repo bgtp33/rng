@@ -13,11 +13,11 @@ p{margin:16px 0 0;font-size:14px;color:#888}
 </style></head><body><main>
 <video id="v" muted loop playsinline autoplay></video>
 <button id="go">Float</button>
-<p>New 00–99 every second. Use the first number you see.<br>Tap the window, then ⏸ to freeze it.</p>
+<p>New 00–99 every 5 seconds. Use the first number you see.<br>Tap the window, then ⏸ to freeze it.</p>
 <p id="msg"></p>
 </main><script>
 const v=document.getElementById('v'),msg=document.getElementById('msg');
-v.src='rng.mp4';
+v.src='rng5.mp4';
 v.muted=true;
 v.addEventListener('loadedmetadata',()=>{v.currentTime=Math.floor(Math.random()*v.duration)+0.5;v.play().catch(()=>{});},{once:true});
 async function float(){
