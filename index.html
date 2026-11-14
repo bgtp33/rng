@@ -20,12 +20,13 @@ const v=document.getElementById('v'),msg=document.getElementById('msg');
 v.src='rng5.mp4';
 v.muted=true;
 v.addEventListener('loadedmetadata',()=>{v.currentTime=Math.floor(Math.random()*v.duration)+0.5;v.play().catch(()=>{});},{once:true});
-async function float(){
-  try{await v.play();}catch(e){}
-  if(document.pictureInPictureEnabled&&v.requestPictureInPicture){await v.requestPictureInPicture();return;}
+function float(){
+  msg.textContent='';
+  v.play().catch(()=>{});
   if(v.webkitSupportsPresentationMode&&v.webkitSupportsPresentationMode('picture-in-picture')){v.webkitSetPresentationMode('picture-in-picture');return;}
-  throw new Error('this browser has no floating-window support');
+  if(document.pictureInPictureEnabled&&v.requestPictureInPicture){v.requestPictureInPicture().catch(e=>msg.textContent='Could not float: '+e.message);return;}
+  msg.textContent='Could not float: no floating-window support here';
 }
-document.getElementById('go').onclick=()=>float().then(()=>msg.textContent='').catch(e=>msg.textContent='Could not float: '+e.message);
-try{navigator.mediaSession.setActionHandler('enterpictureinpicture',()=>float().catch(()=>{}));}catch(e){}
+document.getElementById('go').onclick=float;
+try{navigator.mediaSession.setActionHandler('enterpictureinpicture',float);}catch(e){}
 </script></body></html>
