@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Floating RNG</title>
+<style>
+html,body{margin:0;background:#000;color:#bbb;font:16px/1.4 system-ui,sans-serif}
+main{max-width:320px;margin:0 auto;padding:24px 16px;text-align:center}
+video{width:120px;height:120px;background:#000;display:block;margin:0 auto 20px}
+button{width:100%;padding:16px;font:600 20px system-ui,sans-serif;background:#fff;color:#000;border:0;border-radius:10px}
+p{margin:16px 0 0;font-size:14px;color:#888}
+#msg{color:#e66}
+</style></head><body><main>
+<video id="v" muted loop playsinline autoplay></video>
+<button id="go">Float</button>
+<p>New 00–99 every second. Use the first number you see.<br>Tap the window, then ⏸ to freeze it.</p>
+<p id="msg"></p>
+</main><script>
+const v=document.getElementById('v'),msg=document.getElementById('msg');
+v.src='rng.mp4';
+v.muted=true;
+v.addEventListener('loadedmetadata',()=>{v.currentTime=Math.floor(Math.random()*v.duration)+0.5;v.play().catch(()=>{});},{once:true});
+async function float(){
+  try{await v.play();}catch(e){}
+  if(document.pictureInPictureEnabled&&v.requestPictureInPicture){await v.requestPictureInPicture();return;}
+  if(v.webkitSupportsPresentationMode&&v.webkitSupportsPresentationMode('picture-in-picture')){v.webkitSetPresentationMode('picture-in-picture');return;}
+  throw new Error('this browser has no floating-window support');
+}
+document.getElementById('go').onclick=()=>float().then(()=>msg.textContent='').catch(e=>msg.textContent='Could not float: '+e.message);
+try{navigator.mediaSession.setActionHandler('enterpictureinpicture',()=>float().catch(()=>{}));}catch(e){}
+</script></body></html>
